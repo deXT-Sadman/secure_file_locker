@@ -42,7 +42,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> pickFile() async {
-    FilePickerResult? result = await FilePicker.pickFiles(withData: true);
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      withData: true,
+    );
 
     if (result != null) {
       PlatformFile file = result.files.first;
