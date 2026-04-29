@@ -82,6 +82,30 @@ class _HomeScreenState extends State<HomeScreen> {
     storedIV = iv;
 
     print("Encription Done");
+    print("Original: ${fileBytes!.length}");
+    print("Encrypted: ${encryptedData!.bytes.length}");
+  }
+
+  Future<void> saveEncryptedFile() async {
+    if (encryptedData == null || storedIV == null) {
+      print("Nothing to save");
+      return;
+    }
+
+    try {
+      Directory? directory = Directory('/storage/emulated/0/Download');
+
+      final filePath = "${directory.path}/encrypted_file.enc";
+
+      final combinedBytes = storedIV!.bytes + encryptedData!.bytes;
+
+      final file = File(filePath);
+      await file.writeAsBytes(combinedBytes);
+
+      print("File saved at: $filePath");
+    } catch (e) {
+      print("Error saving file: $e");
+    }
   }
 
   void decryptFile() {
@@ -154,6 +178,13 @@ class _HomeScreenState extends State<HomeScreen> {
             ElevatedButton(
               onPressed: decryptFile,
               child: const Text("Decrypt File"),
+            ),
+
+            SizedBox(height: 10),
+
+            ElevatedButton(
+              onPressed: saveEncryptedFile,
+              child: const Text("Save Encrypted File"),
             ),
           ],
         ),
