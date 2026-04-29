@@ -108,6 +108,36 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  Future<void> pickEncryptedFile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      withData: true,
+    );
+
+    if (result != null) {
+      PlatformFile file = result.files.first;
+
+      final bytes = file.bytes;
+
+      if (bytes != null) {
+        print("No data found");
+        return;
+      }
+
+      final ivBytes = bytes!.sublist(0, 16);
+      final encryptedBytes = bytes.sublist(16);
+
+      setState(() {
+        storedIV = IV(ivBytes);
+        encryptedData = Encrypted(encryptedBytes);
+        selectedFilePath = file.name;
+      });
+
+      print("Encrypted file loaded!");
+    } else {
+      print("No file selected");
+    }
+  }
+
   void decryptFile() {
     if (encryptedData == null ||
         passwordController.text.isEmpty ||
@@ -171,6 +201,13 @@ class _HomeScreenState extends State<HomeScreen> {
             ElevatedButton(
               onPressed: encryptFile,
               child: const Text("Encrypt File"),
+            ),
+
+            SizedBox(height: 10),
+
+            ElevatedButton(
+              onPressed: pickEncryptedFile,
+              child: const Text("Load Encrypted File"),
             ),
 
             SizedBox(height: 10),
