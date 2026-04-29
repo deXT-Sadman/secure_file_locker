@@ -2,6 +2,8 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart' hide Key;
 import 'package:file_picker/file_picker.dart';
 import 'package:encrypt/encrypt.dart';
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
 
 void main() {
   runApp(const MyApp());
